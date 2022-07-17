@@ -10,7 +10,7 @@ add_filter( 'custom_menu_order', 'cagov_ds_structure_wpse_custom_menu_order', 10
 add_filter( 'menu_order', 'cagov_ds_structure_wpse_custom_menu_order', 10, 1 );
 
 /**
- * caGov Design System Administration Menu Setup
+ * Design System Administration Menu Setup
  * Fires before the administration menu loads in the admin.
  *
  * @link https://developer.wordpress.org/reference/hooks/admin_menu/
@@ -28,21 +28,25 @@ function cagov_ds_structure_admin_menu() {
 		'cagov_ds_structure_option_page',
 		sprintf( '%1$s/images/favicon.ico', CAGOV_DESIGN_SYSTEM_STRUCTURE_URI )
 	);
-	//add_submenu_page( 'cagov_ds_structure_options', 'Design System Options', 'Settings', 'manage_options', 'cagov_ds_structure_options', 'cagov_ds_structure_option_page' );
+	// phpcs:disable
+	// add_submenu_page( 'cagov_ds_structure_options', 'Design System Options', 'Settings', 'manage_options', 'cagov_ds_structure_options', 'cagov_ds_structure_option_page' );
 
 	/* If Multisite instance & user is a Network Admin */
 	if ( is_multisite() && current_user_can( 'manage_network_options' ) ) {
 		/* If on root site */
 		if ( 1 === get_current_blog_id() ) {
-			/* GitHub API Key */
+			/*
+			 GitHub API Key */
 			// add_submenu_page( 'cagov_ds_structure_options', 'Design System Options', 'GitHub API Key', 'manage_options', 'cagov_ds_structure_api', 'cagov_ds_structure_api_menu_option_setup' );
 		}
 
 		/* Else single site instance */
 	} else {
-		/* GitHub API Key */
+		/*
+		 GitHub API Key */
 		// add_submenu_page( 'cagov_ds_structure_options', 'Design System Options', 'GitHub API Key', 'manage_options', 'cagov_ds_structure_api', 'cagov_ds_structure_api_menu_option_setup' );
 	}
+	// phpcs:enable
 
 }
 
@@ -123,7 +127,7 @@ function cagov_ds_structure_option_page() {
 	// Get User Profile Color.
 	$user_color = cagov_ds_structure_get_user_color()->colors[2];
 
-	$color_scheme      = get_option( 'cagov_ds_structure_colorscheme' );
+	$color_scheme      = get_option( 'cagov_ds_structure_colorscheme', 'cagov' );
 	$available_schemes = cagov_ds_structure_color_schemes( 'displayname' );
 
 	$navigation_menu = get_option( 'cagov_ds_structure_navigation_menu', 'singlelevel' );
@@ -137,17 +141,17 @@ function cagov_ds_structure_option_page() {
 			<div class="form-group col-sm-5">
 				<label for="cagov_ds_structure_colorscheme" class="d-block mb-0"><strong>Color Scheme</strong></label>
 				<small class="mb-2 text-muted d-block">Apply a site-wide color scheme.</small>
-			    <select id="cagov_ds_structure_colorscheme" name="cagov_ds_structure_colorscheme" class="w-50 form-control">
+				<select id="cagov_ds_structure_colorscheme" name="cagov_ds_structure_colorscheme" class="w-50 form-control">
 					<?php
-						foreach ( $available_schemes as $key => $data ) {
-							$selected = $key === $color_scheme ? ' selected="selected"' : '';
-					?>
+					foreach ( $available_schemes as $key => $data ) {
+						$selected = $key === $color_scheme ? ' selected="selected"' : '';
+						?>
 					<option value="<?php print esc_attr( $key ); ?>"
 						<?php print esc_attr( $selected ); ?>>
 						<?php print esc_attr( $data ); ?>
 					</option>
-					<?php
-						}
+						<?php
+					}
 					?>
 				</select>
 			</div>
@@ -182,10 +186,10 @@ function cagov_ds_structure_api_menu_option_setup() {
 	}
 
 	// caGov Design System API Nonce.
-	$cagov_ds_structure_nonce      = wp_create_nonce( 'cagov_ds_structure_theme_api_options' );
-	$privated_enabled = get_site_option( 'cagov_ds_structure_private_theme_enabled', false ) ? ' checked' : '';
-	$username         = get_site_option( 'cagov_ds_structure_username', 'CA-CODE-Works' );
-	$password         = get_site_option( 'cagov_ds_structure_password', '' );
+	$cagov_ds_structure_nonce = wp_create_nonce( 'cagov_ds_structure_theme_api_options' );
+	$privated_enabled         = get_site_option( 'cagov_ds_structure_private_theme_enabled', false ) ? ' checked' : '';
+	$username                 = get_site_option( 'cagov_ds_structure_username', 'CA-CODE-Works' );
+	$password                 = get_site_option( 'cagov_ds_structure_password', '' );
 	?>
 	<form id="cagov-ds-structure-api-options-form" action="<?php print esc_url( admin_url( 'admin.php?page=cagov_ds_structure_api' ) ); ?>" method="POST">
 		<input type="hidden" name="cagov_ds_structure_theme_api_options_nonce" value="<?php print esc_attr( $cagov_ds_structure_nonce ); ?>" />
@@ -220,7 +224,6 @@ function cagov_ds_structure_api_menu_option_setup() {
  * Save caGov Design System Options
  *
  * @param  array $values caGov Design System option values.
- * @param  array $files caGov Design System files being uploaded.
  *
  * @return void
  */
