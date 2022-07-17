@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin constants.
-$cagov_doc_root = isset( $_SERVER['DOCUMENT_ROOT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) : '';
+$cagov_ds_structure_doc_root = isset( $_SERVER['DOCUMENT_ROOT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) ) : '';
 
 define( 'CAGOV_DESIGN_SYSTEM_STRUCTURE', __DIR__ );
 define( 'CAGOV_DESIGN_SYSTEM_STRUCTURE__VERSION', '1.2.0.3' );
@@ -97,39 +97,11 @@ function cagov_ds_structure_admin_enqueue_scripts( $hook ) {
 	$editor_css = cagov_ds_structure_get_min_file( "/css/cagov-design-system-$color.css" );
 
 	if ( in_array( $hook, $pages, true ) ) {
-		$admin_js = cagov_ds_structure_get_min_file( '/js/admin.js', 'js' );
-
-		/* Enqueue Scripts */
-		wp_enqueue_script( 'jquery' );
-		wp_enqueue_media();
-		wp_enqueue_editor();
-		wp_enqueue_script( 'custom-header' );
-
-		// wp_register_script( 'cagov-ds-structure-admin-scripts', $admin_js, array( 'jquery', 'thickbox' ), CAGOV_DESIGN_SYSTEM_STRUCTURE__VERSION, true );
-
-		/*$schemes = array( 'design-system' => caweb_color_schemes( 'design-system' ) );
-		foreach ( caweb_template_versions() as $v => $label ) {
-			$schemes[ "$v" ] = caweb_color_schemes( $v );
-		}
-
-		$caweb_localize_args = array(
-			'defaultFavIcon'     => caweb_default_favicon_url(),
-			'changeCheck'        => $hook,
-			'caweb_icons'        => array_values( caweb_symbols( -1, '', '', false ) ),
-			'caweb_colors'       => caweb_template_colors(),
-			'tinymce_settings'   => caweb_tiny_mce_settings(),
-			'caweb_colorschemes' => $schemes,
-		);
-
-		wp_localize_script( 'caweb-admin-scripts', 'caweb_admin_args', $caweb_localize_args );
-
-		wp_enqueue_script( 'caweb-admin-scripts' );
-		*/
 		/*
 		Bootstrap 4 Toggle
 		https://gitbrent.github.io/bootstrap4-toggle/
 		*/
-		wp_enqueue_script( 'caweb-boot1', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js', array( 'jquery' ), '3.6.1', true );
+		wp_enqueue_script( 'cagov-ds-structure-boot1', 'https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js', array( 'jquery' ), '3.6.1', true );
 
 		/* Enqueue Styles */
 		wp_enqueue_style( 'cagov-ds-structure-admin-styles', $admin_css, array(), CAGOV_DESIGN_SYSTEM_STRUCTURE__VERSION );
@@ -159,10 +131,10 @@ function cagov_ds_structure_wp_enqueue_scripts() {
 	$verified = isset( $cwes ) && wp_verify_nonce( sanitize_key( $cwes ), 'cagov_ds_structure_wp_enqueue_scripts' );
 
 	$color = get_option( 'cagov_ds_structure_colorscheme', 'cagov' );
-	
+
 	$core_css_file = cagov_ds_structure_get_min_file( "/css/cagov-design-system-$color.css" );
 
-	/* caGov Design System Core CSS */
+	// caGov Design System Core CSS.
 	wp_enqueue_style( 'cagov-design-system-structure-style', $core_css_file, array(), CAGOV_DESIGN_SYSTEM_STRUCTURE__VERSION );
 	wp_enqueue_style( 'caweb-google-font-style', 'https://fonts.googleapis.com/css?family=Asap+Condensed:400,600|Source+Sans+Pro:400,700', array(), CAWEB_VERSION );
 
@@ -180,16 +152,16 @@ function cagov_ds_structure_wp_enqueue_scripts() {
 
 	wp_localize_script( 'cagov-design-system-structure-script', 'args', $localize_args );
 
-	/* Enqueue Scripts */
+	// Enqueue Scripts.
 	wp_enqueue_script( 'cagov-design-system-structure-script' );
 
-	// Deregister styles
+	// Deregister styles.
 	wp_dequeue_style( 'divi-fonts' );
 	wp_dequeue_style( 'caweb-core-style' );
 
-	// Deregister scripts
+	// Deregister scripts.
 	wp_dequeue_script( 'caweb-script' );
-	
+
 }
 
 /**

@@ -1,10 +1,9 @@
 <?php
 /**
- * caGov Design System Helper Functions
+ * Design System Helper Functions
  *
  * @package cagov-design-system
  */
-
 
 /**
  * Load Minified Version of a file
@@ -30,15 +29,15 @@ function cagov_ds_structure_get_min_file( $f, $ext = 'css' ) {
  * @since 4.0
  *
  * @link https://developer.wordpress.org/reference/hooks/get_header/
- * 
- * @param string $partial Name of the partial to use. 
- * @param string $name Name of the specific file to use. 
- * @param array  $args Additional arguments passed to the template.
+ *
+ * @param string       $partial Name of the partial to use.
+ * @param string       $name Name of the specific file to use.
+ * @param string|array $hooks Hooks that need to be skipped so that they dont fire twice.
  * @return void
  */
-function cagov_ds_structure_override_partial($partial, $name, $hooks = ''){
+function cagov_ds_structure_override_partial( $partial, $name, $hooks = '' ) {
 	global $wp_filter;
-	
+
 	/**
 	 * Mimicking WordPress core code behavior.
 	 *
@@ -55,9 +54,9 @@ function cagov_ds_structure_override_partial($partial, $name, $hooks = ''){
 	$buffered = ob_start();
 	if ( $buffered ) {
 		$actions = array();
-		$hooks = is_string( $hooks ) ? array( $hooks ) : $hooks;
+		$hooks   = is_string( $hooks ) ? array( $hooks ) : $hooks;
 
-		foreach($hooks as $hook ){
+		foreach ( $hooks as $hook ) {
 			// Skip any partial-specific actions so they don't run twice.
 			$actions[ $hook ] = $wp_filter[ $hook ];
 			unset( $wp_filter[ $hook ] );
@@ -67,9 +66,11 @@ function cagov_ds_structure_override_partial($partial, $name, $hooks = ''){
 		$html = ob_get_clean();
 
 		// Restore skipped actions.
-		foreach($hooks as $hook ){
+		// phpcs:disable
+		foreach ( $hooks as $hook ) {
 			$wp_filter[ $hook ] = $actions[ $hook ];
 		}
+		// phpcs:enable
 	}
 
 	require_once CAGOV_DESIGN_SYSTEM_STRUCTURE . "/$partial.php";
@@ -100,15 +101,14 @@ function cagov_ds_structure_get_user_color() {
  */
 function cagov_ds_structure_color_schemes( $field = '', $color = '' ) {
 	$css_dir = sprintf( '%1$s/css', CAGOV_DESIGN_SYSTEM_STRUCTURE );
-	//$pattern = '/.*\/([\w\s]*)\.css/';
 	$pattern = '/.*cagov-design-system-(.*).css/';
 
 	$schemes = array();
 
 	/*
-	Get glob of colorschemes 
+	Get glob of colorschemes
 	*/
-	$tmp = glob( sprintf( '%1$s/*[^.min]\.css', $css_dir  ) );
+	$tmp = glob( sprintf( '%1$s/*[^.min]\.css', $css_dir ) );
 
 	/*
 	Iterate thru each colorscheme

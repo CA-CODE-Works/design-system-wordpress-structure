@@ -1,6 +1,6 @@
 <?php
 /**
- * ca.gov Design System Structure Filters
+ * Design System Structure Filters
  *
  * @package cagov-design-system-structure
  */
@@ -103,7 +103,7 @@ function cagov_ds_structure_default_events_template_classes( $classes ) {
  *
  * @param array<string> $classes An (unindexed) array of classes to apply.
  */
-function cagov_ds_structure_page_title_class( $class = '' ) {
+function cagov_ds_structure_page_title_class( $classes = '' ) {
 	return 'page-title-ds';
 }
 
@@ -114,7 +114,7 @@ function cagov_ds_structure_page_title_class( $class = '' ) {
  *
  * @param array<string> $classes An (unindexed) array of classes to apply.
  */
-function cagov_ds_structure_page_container_class( $class = '' ) {
+function cagov_ds_structure_page_container_class( $classes = '' ) {
 	return 'page-container-ds';
 }
 
@@ -125,6 +125,6 @@ function cagov_ds_structure_page_container_class( $class = '' ) {
  *
  * @param array<string> $classes An (unindexed) array of classes to apply.
  */
-function cagov_ds_structure_main_content_class( $class = '' ) {
+function cagov_ds_structure_main_content_class( $classes = '' ) {
 	return 'main-container-ds';
 }
